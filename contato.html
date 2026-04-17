@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contato</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 30px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .card {
+      background: #2f2f4f;
+      padding: 30px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 430px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: 0.3s;
+      text-align: left;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      background: #3f3f6f;
+    }
+
+    .descricao {
+      color: #d9d9e6;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #44446a;
+      color: white;
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    input:focus, textarea:focus {
+      box-shadow: 0 0 0 2px rgba(0, 200, 150, 0.45);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .btn {
+      margin-top: 16px;
+      width: 100%;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #00c896, #00a67d);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 200, 150, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #00e6aa, #00b386);
+      box-shadow: 0 6px 15px rgba(0, 200, 150, 0.5);
+    }
+
+    .erro {
+      color: #ffb3c1;
+      font-size: 14px;
+      margin-top: 6px;
+      min-height: 18px;
+    }
+
+    .voltar {
+      margin-top: 12px;
+      background: transparent;
+      border: 1px solid #00c896;
+    }
+
+    .voltar:hover {
+      background: rgba(0, 200, 150, 0.12);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📩 Contato</h1>
+
+  <div class="container">
+    <div class="card">
+      <p class="descricao">
+        Envie sua mensagem diretamente pelo site para
+        <strong>vitorblockicontato@gmail.com</strong>.
+      </p>
+
+      <form
+        action="https://formsubmit.co/vitorblockicontato@gmail.com"
+        method="POST"
+        id="contactForm"
+      >
+        <label for="nome">Nome</label>
+        <input
+          type="text"
+          id="nome"
+          name="name"
+          placeholder="Seu nome"
+          required
+          minlength="2"
+        >
+
+        <label for="email">E-mail</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="[email protected]"
+          required
+        >
+        <div id="emailErro" class="erro"></div>
+
+        <label for="assunto">Assunto</label>
+        <input
+          type="text"
+          id="assunto"
+          name="_subject"
+          placeholder="Assunto da mensagem"
+          required
+          minlength="3"
+        >
+
+        <label for="mensagem">Mensagem</label>
+        <textarea
+          id="mensagem"
+          name="message"
+          placeholder="Digite sua mensagem"
+          required
+          minlength="10"
+        ></textarea>
+
+        <!-- Faz o reply ir para o e-mail digitado pela pessoa -->
+        <input type="hidden" name="_replyto" id="replytoHidden">
+
+        <!-- Evita captcha visual -->
+        <input type="hidden" name="_captcha" value="false">
+
+        <!-- Página de retorno depois do envio -->
+        <input type="hidden" name="_next" value="obrigado.html">
+
+        <button type="submit" class="btn">Enviar mensagem</button>
+        <button type="button" class="btn voltar" onclick="window.close()">Voltar</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("contactForm");
+    const emailInput = document.getElementById("email");
+    const emailErro = document.getElementById("emailErro");
+    const replytoHidden = document.getElementById("replytoHidden");
+
+    emailInput.addEventListener("input", () => {
+      if (emailInput.validity.valueMissing) {
+        emailErro.textContent = "Digite seu e-mail.";
+      } else if (emailInput.validity.typeMismatch) {
+        emailErro.textContent = "Digite um e-mail em formato válido.";
+      } else {
+        emailErro.textContent = "";
+      }
+    });
+
+    form.addEventListener("submit", (e) => {
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        form.reportValidity();
+        return;
+      }
+
+      replytoHidden.value = emailInput.value.trim();
+    });
+  </script>
+</body>
+</html>

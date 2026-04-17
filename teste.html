@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Teste de Intervalo</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: #0f0;
+      padding: 20px;
+    }
+
+    h2 {
+      color: white;
+    }
+
+    /* ===== DESCRIÇÃO ===== */
+    .descricao {
+      background: #222;
+      color: #ccc;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* ===== TERMINAL ===== */
+    #terminal {
+      background: black;
+      padding: 15px;
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #0f0;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #222;
+      color: #0f0;
+      border: none;
+    }
+
+    /* ===== BOTÃO MODERNO ===== */
+    button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #00c896, #00a67d);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 200, 150, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #00e6aa, #00b386);
+      box-shadow: 0 6px 15px rgba(0, 200, 150, 0.5);
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+<body>
+
+<h2>🔢 Teste de Intervalo</h2>
+
+<!-- ===== DESCRIÇÃO ===== -->
+<div class="descricao">
+  <p>
+    Este sistema solicita ao usuário que digite um número dentro do intervalo de -100 até 100.
+  </p>
+
+  <p>
+    Enquanto o valor digitado estiver entre <strong>-99 e 99</strong>, o sistema continuará solicitando novos valores.
+  </p>
+
+  <p>
+    O programa só é encerrado quando o usuário digita um número fora desse intervalo, ou seja:
+  </p>
+
+  <ul>
+    <li>✅ Menor ou igual a -99</li>
+    <li>✅ Maior ou igual a 99</li>
+  </ul>
+
+  <p>
+    Quando isso acontece, o sistema exibe a mensagem <strong>"Encerrado"</strong>.
+  </p>
+</div>
+
+<!-- BOTÃO -->
+<button onclick="iniciar()">▶ Iniciar Teste</button>
+
+<!-- TERMINAL -->
+<div id="terminal"></div>
+<input id="inputBox" placeholder="Digite aqui e pressione Enter">
+
+<script>
+let ativo = false;
+
+function print(texto = "") {
+  const term = document.getElementById("terminal");
+  term.innerHTML += texto + "<br>";
+  term.scrollTop = term.scrollHeight;
+}
+
+function iniciar() {
+  document.getElementById("terminal").innerHTML = "";
+  ativo = true;
+
+  print("Digite um valor no intervalo de -100 até 100:");
+}
+
+document.getElementById("inputBox").addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && ativo) {
+    let valor = this.value;
+    this.value = "";
+
+    print("> " + valor);
+
+    let x = parseInt(valor);
+
+    if (isNaN(x)) {
+      print("Valor inválido.");
+      print("");
+      print("Digite um valor no intervalo de -100 até 100:");
+      return;
+    }
+
+    if (x < 99 && x > -99) {
+      print("");
+      print("Digite um valor no intervalo de -100 até 100:");
+    } else {
+      print("");
+      print("Encerrado");
+      ativo = false;
+    }
+  }
+});
+</script>
+
+</body>
+</html>

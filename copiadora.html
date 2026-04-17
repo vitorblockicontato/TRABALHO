@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Copiadora</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #0f0;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h2 {
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    /* Caixa curta que fica grudada ao rolar a página */
+    .descricao-rapida {
+      position: sticky;
+      top: 15px;
+      z-index: 1000;
+      background: #222;
+      color: #ccc;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.4;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    /* Caixa completa com explicação detalhada */
+    .descricao-completa {
+      background: #222;
+      color: #ccc;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .descricao-completa ul,
+    .descricao-rapida ul {
+      padding-left: 20px;
+    }
+
+    .descricao-rapida h3,
+    .descricao-completa h3 {
+      color: white;
+      margin-top: 0;
+    }
+
+    #terminal {
+      background: black;
+      padding: 15px;
+      height: 350px;
+      overflow-y: auto;
+      border: 1px solid #0f0;
+      border-radius: 10px;
+      box-shadow: inset 0 0 10px rgba(0,255,0,0.08);
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      background: #222;
+      color: #0f0;
+      border: none;
+      border-radius: 10px;
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #7fbf7f;
+    }
+
+    button {
+      margin-top: 15px;
+      margin-bottom: 15px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #00c896, #00a67d);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 200, 150, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #00e6aa, #00b386);
+      box-shadow: 0 6px 15px rgba(0, 200, 150, 0.5);
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🖨️ Sistema da Copiadora</h2>
+
+    <div class="descricao-rapida">
+      <h3>📌 Tabela Rápida</h3>
+
+      <p><strong>Serviços:</strong></p>
+      <p>DIG = R$1,10 | ICO = R$1,00</p>
+      <p>IPB = R$0,40 | FOT = R$0,20</p>
+
+      <p><strong>Descontos:</strong></p>
+      <p>20+ = 15% | 200+ = 20% | 2000+ = 25%</p>
+
+      <p><strong>Extra:</strong></p>
+      <p>1 = R$15 | 2 = R$40 | 0 = Nenhum</p>
+    </div>
+
+    <div class="descricao-completa">
+      <h3>📖 Sobre o sistema</h3>
+
+      <p>
+        Este sistema simula o funcionamento de uma copiadora, permitindo calcular o valor total
+        do serviço com base no tipo escolhido, na quantidade de páginas e nos serviços adicionais.
+      </p>
+
+      <p><strong>Serviços disponíveis:</strong></p>
+      <ul>
+        <li>DIG → Digitalização (R$1,10 por página)</li>
+        <li>ICO → Impressão Colorida (R$1,00 por página)</li>
+        <li>IPB → Impressão Preto e Branco (R$0,40 por página)</li>
+        <li>FOT → Fotocópia (R$0,20 por página)</li>
+      </ul>
+
+      <p><strong>Descontos por quantidade:</strong></p>
+      <ul>
+        <li>20 a 199 páginas → 15% de desconto</li>
+        <li>200 a 1999 páginas → 20% de desconto</li>
+        <li>2000 a 19999 páginas → 25% de desconto</li>
+        <li>20000 ou mais → quantidade não permitida</li>
+      </ul>
+
+      <p><strong>Serviços adicionais:</strong></p>
+      <ul>
+        <li>1 → Encadernação simples (R$15)</li>
+        <li>2 → Encadernação capa dura (R$40)</li>
+        <li>0 → Sem adicional</li>
+      </ul>
+    </div>
+
+    <button onclick="iniciar()">▶ Iniciar Sistema</button>
+
+    <div id="terminal"></div>
+    <input id="inputBox" placeholder="Digite aqui e pressione Enter">
+  </div>
+
+  <script>
+    let etapa = 0;
+    let valorServico = 0;
+    let paginasComDesconto = 0;
+    let valorExtra = 0;
+
+    /* Escreve no terminal com quebra de linha */
+    function print(texto = "") {
+      const term = document.getElementById("terminal");
+      term.innerHTML += texto + "<br>";
+      term.scrollTop = term.scrollHeight;
+    }
+
+    /* Mostra as opções de serviço */
+    function mostrarServicos() {
+      print("Escolha o serviço desejado:");
+      print("DIG - Digitalização (R$1,10/página)");
+      print("ICO - Impressão Colorida (R$1,00/página)");
+      print("IPB - Impressão Preto e Branco (R$0,40/página)");
+      print("FOT - Fotocópia (R$0,20/página)");
+      print("");
+      print("Digite o código do serviço (DIG/ICO/IPB/FOT):");
+    }
+
+    /* Mostra as opções de adicional */
+    function mostrarExtras() {
+      print("Deseja algum serviço adicional?");
+      print("1 - Encadernação Simples (R$15)");
+      print("2 - Encadernação Capa Dura (R$40)");
+      print("0 - Nenhum adicional (R$0)");
+      print("");
+      print("Escolha a opção (1/2/0):");
+    }
+
+    /* Reinicia o sistema */
+    function iniciar() {
+      document.getElementById("terminal").innerHTML = "";
+      document.getElementById("inputBox").value = "";
+      etapa = 1;
+      valorServico = 0;
+      paginasComDesconto = 0;
+      valorExtra = 0;
+
+      print("Bem-vindo ao sistema de cobrança da Copiadora! Desenvolvido por Vitor Eduardo Blocki.");
+      print("");
+      mostrarServicos();
+      document.getElementById("inputBox").focus();
+    }
+
+    document.getElementById("inputBox").addEventListener("keydown", function(e) {
+      if (e.key !== "Enter") return;
+
+      const valorDigitado = this.value.trim().toUpperCase();
+      this.value = "";
+
+      if (etapa === 0) return;
+
+      print("> " + valorDigitado);
+
+      /* Etapa 1: escolha do serviço */
+      if (etapa === 1) {
+        if (valorDigitado === "DIG") {
+          valorServico = 1.10;
+        } else if (valorDigitado === "ICO") {
+          valorServico = 1.00;
+        } else if (valorDigitado === "IPB") {
+          valorServico = 0.40;
+        } else if (valorDigitado === "FOT") {
+          valorServico = 0.20;
+        } else {
+          print("Serviço inválido. Tente novamente.");
+          print("");
+          mostrarServicos();
+          return;
+        }
+
+        etapa = 2;
+        print("");
+        print("Digite o número de páginas:");
+        return;
+      }
+
+      /* Etapa 2: número de páginas com desconto */
+      if (etapa === 2) {
+        const num = parseInt(valorDigitado);
+
+        if (isNaN(num)) {
+          print("Entrada inválida. Digite um número inteiro.");
+          print("");
+          print("Digite o número de páginas:");
+          return;
+        }
+
+        if (num >= 20000) {
+          print("Quantidade de páginas não permitida.");
+          print("");
+          print("Digite o número de páginas:");
+          return;
+        } else if (num >= 2000) {
+          paginasComDesconto = num * 0.75;
+        } else if (num >= 200) {
+          paginasComDesconto = num * 0.80;
+        } else if (num >= 20) {
+          paginasComDesconto = num * 0.85;
+        } else if (num > 0) {
+          paginasComDesconto = num;
+        } else {
+          print("Número inválido. Tente novamente.");
+          print("");
+          print("Digite o número de páginas:");
+          return;
+        }
+
+        etapa = 3;
+        print("");
+        mostrarExtras();
+        return;
+      }
+
+      /* Etapa 3: serviço adicional */
+      if (etapa === 3) {
+        if (valorDigitado === "1") {
+          valorExtra = 15.00;
+        } else if (valorDigitado === "2") {
+          valorExtra = 40.00;
+        } else if (valorDigitado === "0") {
+          valorExtra = 0.00;
+        } else {
+          print("Opção inválida. Tente novamente.");
+          print("");
+          mostrarExtras();
+          return;
+        }
+
+        const total = (valorServico * paginasComDesconto) + valorExtra;
+
+        print("");
+        print(`Valor total a pagar: R$ ${total.toFixed(2)}`);
+        print("Obrigado por usar o sistema!");
+
+        etapa = 0;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Formação</title>
+
+  <style>
+    /* ===== ESTILO GERAL ===== */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 30px;
+    }
+
+    /* ===== CONTAINER ===== */
+    .container {
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      background: #2f2f4f;
+      padding: 30px;
+      border-radius: 15px;
+      width: 300px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      background: #3f3f6f;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin: 10px 0;
+      padding: 10px;
+      background: #44446a;
+      border-radius: 8px;
+    }
+
+    /* ===== BOTÃO ===== */
+    .btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #00c896;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background: #00a67d;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎓 Formação</h1>
+
+<!-- CARD COM OS CURSOS -->
+<div class="container">
+  <div class="card">
+    <h2>Meus Cursos</h2>
+
+    <ul>
+      <li>Ensino Médio Técnico - Colégio Theodoro de Bona (Concluído)</li>
+      <li>Ciência da Computação (Em Andamento)</li>
+    </ul>
+
+    <!-- BOTÃO VOLTAR -->
+    <button class="btn" onclick="voltar()">Voltar</button>
+  </div>
+</div>
+
+<script>
+  /* ===== FUNÇÃO PARA VOLTAR ===== */
+  function voltar() {
+    window.close(); // fecha a aba (se foi aberta pelo site)
+  }
+
+  /* ===== EFEITO EXTRA ===== */
+  console.log("Página de formação carregada!");
+</script>
+
+</body>
+</html>

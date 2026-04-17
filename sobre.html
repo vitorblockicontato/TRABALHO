@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Sobre Mim</title>
+
+  <style>
+    /* ===== ESTILO GERAL ===== */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 30px;
+    }
+
+    /* ===== CONTAINER ===== */
+    .container {
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      background: #2f2f4f;
+      padding: 30px;
+      border-radius: 15px;
+      width: 350px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      background: #3f3f6f;
+    }
+
+    /* ===== TEXTO ===== */
+    p {
+      line-height: 1.6;
+      margin-top: 15px;
+    }
+
+    /* ===== BOTÃO ===== */
+    .btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #00c896;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: #00a67d;
+    }
+  </style>
+</head>
+<body>
+
+<h1>👤 Sobre Mim</h1>
+
+<div class="container">
+  <div class="card">
+
+    <h2>Vitor Eduardo Blocki</h2>
+
+    <!-- DESCRIÇÃO -->
+    <p>
+      Sou estudante e desenvolvedor iniciante, tenho 20 anos e tenho interesse em programação,
+      especialmente em Python, Java e C++, lógica e desenvolvimento de sistemas.
+    </p>
+
+    <p>
+      Atualmente estou focado em aprender e desenvolver projetos práticos,
+      buscando evoluir minhas habilidades e construir um portfólio sólido. Além de finalziar a Faculdade
+      de Ciência da Computação e dar início em mestrado e, posteriormente, Doutorado na área.
+    </p>
+
+    <!-- BOTÃO INTERATIVO -->
+    <button class="btn" onclick="mostrarMensagem()">Clique para mais</button>
+
+    <!-- TEXTO EXTRA -->
+    <p id="extra"></p>
+
+    <!-- VOLTAR -->
+    <button class="btn" onclick="voltar()">Voltar</button>
+
+  </div>
+</div>
+
+<script>
+  /* ===== MOSTRAR TEXTO EXTRA ===== */
+  function mostrarMensagem() {
+    document.getElementById("extra").innerText =
+      "Tenho interesse em evoluir na área de tecnologia e atuar profissionalmente com desenvolvimento.";
+  }
+
+  /* ===== VOLTAR ===== */
+  function voltar() {
+    window.close();
+  }
+
+  console.log("Página sobre mim carregada!");
+</script>
+
+</body>
+</html>

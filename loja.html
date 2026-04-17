@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Loja</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: #0f0;
+      padding: 20px;
+    }
+
+    h2 {
+      color: white;
+    }
+
+    /* DESCRIÇÃO */
+    .descricao {
+      background: #222;
+      color: #ccc;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    #terminal {
+      background: black;
+      padding: 15px;
+      height: 320px;
+      overflow-y: auto;
+      border: 1px solid #0f0;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #222;
+      color: #0f0;
+      border: none;
+    }
+
+    button {
+  margin-top: 15px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #00c896, #00a67d);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 200, 150, 0.3);
+    }
+
+/* EFEITO HOVER */
+button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #00e6aa, #00b386);
+  box-shadow: 0 6px 15px rgba(0, 200, 150, 0.5);
+}
+
+/* EFEITO AO CLICAR */
+button:active {
+  transform: scale(0.97);
+    }   
+  </style>
+</head>
+<body>
+
+<h2>🛒 Sistema da Loja</h2>
+
+<!-- DESCRIÇÃO DO SISTEMA -->
+<div class="descricao">
+  <p>
+    Este sistema simula o funcionamento de uma loja, permitindo calcular o valor total de uma compra com base no preço do produto e na quantidade informada.
+  </p>
+
+  <p><strong>Descontos aplicados:</strong></p>
+  <ul>
+    <li>💰 Entre R$ 2.500 e R$ 5.999 → 40% de desconto</li>
+    <li>💰 Entre R$ 6.000 e R$ 9.999 → 11% de desconto</li>
+    <li>💰 Acima de R$ 10.000 → 11% de desconto</li>
+    <li>❌ Abaixo de R$ 2.500 → sem desconto</li>
+  </ul>
+</div>
+
+<button onclick="iniciar()">Iniciar</button>
+
+<div id="terminal"></div>
+<input id="inputBox" placeholder="Digite aqui e pressione Enter">
+
+<script>
+let etapa = 0;
+let valorProduto = 0;
+let quantidade = 0;
+
+function print(texto = "") {
+  const term = document.getElementById("terminal");
+  term.innerHTML += texto + "<br>";
+  term.scrollTop = term.scrollHeight;
+}
+
+function iniciar() {
+  document.getElementById("terminal").innerHTML = "";
+  etapa = 1;
+
+  print("Bem-vindo a Loja do Vitor Eduardo Blocki");
+  print("");
+  print("Insira o valor do produto:");
+}
+
+document.getElementById("inputBox").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    let valor = this.value;
+    this.value = "";
+
+    print("> " + valor);
+
+    if (etapa === 1) {
+      valorProduto = parseFloat(valor);
+
+      if (isNaN(valorProduto) || valorProduto <= 0) {
+        print("Valor inválido.");
+        print("");
+        print("Insira o valor do produto:");
+        return;
+      }
+
+      etapa = 2;
+      print("");
+      print("Insira a quantidade do produto:");
+    }
+
+    else if (etapa === 2) {
+      quantidade = parseFloat(valor);
+
+      if (isNaN(quantidade) || quantidade <= 0) {
+        print("Quantidade inválida.");
+        print("");
+        print("Insira a quantidade do produto:");
+        return;
+      }
+
+      let total = valorProduto * quantidade;
+
+      print("");
+
+      if (total >= 2500 && total < 6000) {
+        let novo = total - total * 0.4;
+        print(`Parabéns, você ganhou um desconto de 4%, valor original: R$${total}, com desconto: R$${novo}`);
+      } 
+      else if (total >= 6000 && total < 10000) {
+        let novo = total - total * 0.11;
+        print(`Parabéns, você ganhou um desconto de 7%, valor original: R$${total}, com desconto: R$${novo}`);
+      } 
+      else if (total >= 10000) {
+        let novo = total - total * 0.11;
+        print(`Parabéns, você ganhou um desconto de 11%, valor original: R$${total}, com desconto: R$${novo}`);
+      } 
+      else {
+        print(`Valor total: R$${total} (sem desconto)`);
+      }
+
+      etapa = 0;
+    }
+  }
+});
+</script>
+
+</body>
+</html>

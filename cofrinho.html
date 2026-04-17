@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cofrinho</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1, h2, h3 {
+      color: white;
+    }
+
+    .descricao,
+    .painel,
+    .cotacoes {
+      background: #222;
+      color: #ccc;
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .cotacoes {
+      border-left: 4px solid #00c896;
+    }
+
+    .grid-cotacoes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .cotacao-item {
+      background: #1a1a1a;
+      padding: 12px;
+      border-radius: 10px;
+      color: #eee;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 6px;
+      color: #ddd;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #2a2a2a;
+      color: white;
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #00c896, #00a67d);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 200, 150, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #00e6aa, #00b386);
+    }
+
+    .acoes {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .acoes button {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .lista {
+      background: black;
+      color: #0f0;
+      padding: 15px;
+      min-height: 180px;
+      border-radius: 10px;
+      border: 1px solid #0f0;
+      overflow-y: auto;
+    }
+
+    .resultado {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #00e6aa;
+    }
+
+    .muted {
+      color: #9ad9c4;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💰 Sistema Cofrinho</h1>
+
+    <div class="descricao">
+      <h3>📖 Descrição do sistema</h3>
+      <p>
+        Este sistema simula um cofrinho de moedas com três tipos: <strong>Real</strong>,
+        <strong>Dólar</strong> e <strong>Euro</strong>.
+      </p>
+      <p>
+        Você pode adicionar moedas ao cofrinho, listar tudo o que foi guardado e ver o
+        total convertido para <strong>Real (BRL)</strong>.
+      </p>
+      <p>
+        As cotações de Dólar e Euro são atualizadas automaticamente a cada <strong>1 hora</strong>.
+      </p>
+    </div>
+
+    <div class="cotacoes">
+      <h3>📈 Cotações atuais</h3>
+
+      <div class="grid-cotacoes">
+        <div class="cotacao-item">
+          <strong>Dólar → Real</strong>
+          <div id="usdRate">Carregando...</div>
+        </div>
+
+        <div class="cotacao-item">
+          <strong>Euro → Real</strong>
+          <div id="eurRate">Carregando...</div>
+        </div>
+
+        <div class="cotacao-item">
+          <strong>Última atualização</strong>
+          <div id="ultimaAtualizacao">Carregando...</div>
+        </div>
+      </div>
+
+      <p class="muted" id="statusCotacao">
+        Buscando cotações...
+      </p>
+    </div>
+
+    <div class="painel">
+      <h2>Adicionar moeda</h2>
+
+      <label for="tipoMoeda">Tipo da moeda</label>
+      <select id="tipoMoeda">
+        <option value="Dolar">Dólar</option>
+        <option value="Euro">Euro</option>
+        <option value="Real">Real</option>
+      </select>
+
+      <label for="valorMoeda">Valor</label>
+      <input type="number" id="valorMoeda" step="0.01" placeholder="Digite o valor">
+
+      <div class="acoes">
+        <button onclick="adicionarMoeda()">➕ Adicionar</button>
+        <button onclick="listarMoedas()">📋 Listar moedas</button>
+        <button onclick="mostrarTotal()">💵 Mostrar total</button>
+        <button onclick="limparCofrinho()">🗑️ Limpar</button>
+      </div>
+
+      <div class="resultado" id="resultado"></div>
+    </div>
+
+    <div class="painel">
+      <h2>Terminal do Cofrinho</h2>
+      <div class="lista" id="saida"></div>
+    </div>
+  </div>
+
+  <script>
+    // Lista que representa o ArrayList<Moeda> do Java
+    const listaMoedas = [];
+
+    // Cotações iniciais padrão, usadas se a API falhar
+    let cotacoes = {
+      USD: 5.20,
+      EUR: 5.60
+    };
+
+    function imprimir(texto = "") {
+      const saida = document.getElementById("saida");
+      saida.innerHTML += texto + "<br>";
+      saida.scrollTop = saida.scrollHeight;
+    }
+
+    function formatarMoeda(valor) {
+      return valor.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      });
+    }
+
+    function atualizarPainelCotacoes() {
+      document.getElementById("usdRate").innerText = formatarMoeda(cotacoes.USD);
+      document.getElementById("eurRate").innerText = formatarMoeda(cotacoes.EUR);
+
+      const agora = new Date();
+      document.getElementById("ultimaAtualizacao").innerText =
+        agora.toLocaleString("pt-BR");
+    }
+
+    async function atualizarCotacoes() {
+      const status = document.getElementById("statusCotacao");
+      status.innerText = "Atualizando cotações...";
+
+      try {
+        const resposta = await fetch("https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL");
+        const dados = await resposta.json();
+
+        // A AwesomeAPI retorna o endpoint /json/last/:moedas para últimas cotações.
+        if (dados.USDBRL && dados.EURBRL) {
+          cotacoes.USD = parseFloat(dados.USDBRL.bid);
+          cotacoes.EUR = parseFloat(dados.EURBRL.bid);
+
+          atualizarPainelCotacoes();
+          status.innerText = "Cotações atualizadas com sucesso.";
+          imprimir("> Cotações atualizadas automaticamente.");
+        } else {
+          throw new Error("Resposta inválida da API.");
+        }
+      } catch (erro) {
+        atualizarPainelCotacoes();
+        status.innerText = "Não foi possível atualizar agora. Usando cotações padrão.";
+        imprimir("> Falha ao atualizar cotações. Mantidos valores padrão.");
+      }
+    }
+
+    function criarMoeda(tipo, valor) {
+      return {
+        tipo,
+        valor,
+        converter: function () {
+          if (this.tipo === "Dolar") return this.valor * cotacoes.USD;
+          if (this.tipo === "Euro") return this.valor * cotacoes.EUR;
+          return this.valor;
+        },
+        info: function () {
+          return `${this.tipo} - Valor: ${this.valor.toFixed(2)}`;
+        }
+      };
+    }
+
+    function adicionarMoeda() {
+      const tipo = document.getElementById("tipoMoeda").value;
+      const valor = parseFloat(document.getElementById("valorMoeda").value);
+      const resultado = document.getElementById("resultado");
+
+      if (isNaN(valor) || valor <= 0) {
+        resultado.innerText = "Digite um valor válido maior que zero.";
+        return;
+      }
+
+      const moeda = criarMoeda(tipo, valor);
+      listaMoedas.push(moeda);
+
+      resultado.innerText = `${tipo} adicionado com sucesso.`;
+      imprimir(`> Moeda adicionada: ${moeda.info()}`);
+
+      document.getElementById("valorMoeda").value = "";
+      document.getElementById("valorMoeda").focus();
+    }
+
+    function listarMoedas() {
+      const resultado = document.getElementById("resultado");
+
+      if (listaMoedas.length === 0) {
+        resultado.innerText = "O cofrinho está vazio.";
+        imprimir("> Nenhuma moeda cadastrada.");
+        return;
+      }
+
+      imprimir("");
+      imprimir("Moedas dentro do cofrinho:");
+      listaMoedas.forEach((moeda, index) => {
+        imprimir(`${index + 1}. ${moeda.info()} → convertido: ${formatarMoeda(moeda.converter())}`);
+      });
+
+      resultado.innerText = "Listagem exibida no terminal.";
+    }
+
+    function mostrarTotal() {
+      const resultado = document.getElementById("resultado");
+
+      if (listaMoedas.length === 0) {
+        resultado.innerText = "O cofrinho está vazio.";
+        imprimir("> Total convertido: R$ 0,00");
+        return;
+      }
+
+      let soma = 0;
+      for (const moeda of listaMoedas) {
+        soma += moeda.converter();
+      }
+
+      const totalFormatado = formatarMoeda(soma);
+      resultado.innerText = `Total convertido para Real: ${totalFormatado}`;
+      imprimir("");
+      imprimir(`Total convertido para Real: ${totalFormatado}`);
+    }
+
+    function limparCofrinho() {
+      listaMoedas.length = 0;
+      document.getElementById("resultado").innerText = "Cofrinho limpo com sucesso.";
+      document.getElementById("saida").innerHTML = "";
+      imprimir("> Cofrinho reiniciado.");
+    }
+
+    // Inicialização
+    atualizarPainelCotacoes();
+    atualizarCotacoes();
+
+    // Atualiza a cada 1 hora = 3.600.000 ms
+    setInterval(atualizarCotacoes, 3600000);
+
+    imprimir("Sistema do Cofrinho carregado.");
+    imprimir("As cotações serão atualizadas automaticamente a cada 1 hora.");
+  </script>
+</body>
+</html>

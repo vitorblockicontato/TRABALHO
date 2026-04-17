@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfólio</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#1e1e2f,#2a2a40);
+    color:white;
+    text-align:center;
+}
+
+header{
+    padding:25px;
+}
+
+.container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:20px;
+    padding:30px;
+    max-width:1100px;
+    margin:auto;
+}
+
+/* Cards dos projetos */
+.card{
+    background:#2f2f4f;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    transition:0.3s;
+    cursor:pointer;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    background:#3f3f6f;
+}
+
+.card h2{
+    margin-top:0;
+    color:#00e6aa;
+}
+
+.card p{
+    color:#ddd;
+    font-size:14px;
+}
+
+/* Botão */
+button{
+    margin-top:15px;
+    padding:10px 18px;
+    background:linear-gradient(135deg,#00c896,#00a67d);
+    border:none;
+    color:white;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>💻 Meu Portfólio</h1>
+<p>Projetos desenvolvidos em Python, JavaScript e Java</p>
+</header>
+
+<div class="container">
+
+    <!-- SORVETERIA -->
+    <div class="card">
+        <h2>🍦 Sorveteria</h2>
+        <p>Sistema de pedidos com sabores, tamanhos, quantidade e total.</p>
+        <button onclick="abrir('sorveteria.html')">Abrir Projeto</button>
+    </div>
+
+    <!-- LOJA -->
+    <div class="card">
+        <h2>🛒 Loja</h2>
+        <p>Calcula compras com quantidade e descontos automáticos.</p>
+        <button onclick="abrir('loja.html')">Abrir Projeto</button>
+    </div>
+
+    <!-- COPIADORA -->
+    <div class="card">
+        <h2>🖨️ Copiadora</h2>
+        <p>Serviços de impressão com descontos por páginas e extras.</p>
+        <button onclick="abrir('copiadora.html')">Abrir Projeto</button>
+    </div>
+
+    <!-- TESTE -->
+    <div class="card">
+        <h2>🔢 Teste</h2>
+        <p>Validação de intervalo numérico com repetição automática.</p>
+        <button onclick="abrir('teste.html')">Abrir Projeto</button>
+    </div>
+
+    <!-- NOVO COFRINHO -->
+    <div class="card">
+        <h2>💰 Cofrinho</h2>
+        <p>Sistema baseado em Java com moedas em Real, Euro e Dólar.</p>
+        <button onclick="abrir('cofrinho.html')">Abrir Projeto</button>
+    </div>
+
+</div>
+
+<script>
+/* Função para abrir cada projeto em nova aba */
+function abrir(pagina){
+    window.open(pagina, "_blank");
+}
+</script>
+
+</body>
+</html>

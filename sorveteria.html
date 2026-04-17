@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Sorveteria</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: #0f0;
+      padding: 20px;
+    }
+
+    h2 {
+      color: white;
+    }
+
+    /* ===== DESCRIÇÃO ===== */
+    .descricao {
+      background: #222;
+      color: #ccc;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* ===== TERMINAL ===== */
+    #terminal {
+      background: black;
+      padding: 15px;
+      height: 350px;
+      overflow-y: auto;
+      border: 1px solid #0f0;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #222;
+      color: #0f0;
+      border: none;
+    }
+
+    /* ===== BOTÃO ===== */
+    button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #00c896, #00a67d);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 200, 150, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #00e6aa, #00b386);
+      box-shadow: 0 6px 15px rgba(0, 200, 150, 0.5);
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+<body>
+
+<h2>🍦 Sistema da Sorveteria</h2>
+
+<!-- ===== DESCRIÇÃO ===== -->
+<div class="descricao">
+  <p>
+    Este sistema simula o atendimento de uma sorveteria, permitindo que o cliente escolha sabores, tamanhos e quantidade de produtos.
+  </p>
+
+  <p><strong>Sabores disponíveis:</strong></p>
+  <ul>
+    <li>CP → Cupuaçu</li>
+    <li>AC → Açaí</li>
+  </ul>
+
+  <p><strong>Tamanhos e preços:</strong></p>
+  <ul>
+    <li>P → Pequeno (R$9 CP | R$11 AC)</li>
+    <li>M → Médio (R$14 CP | R$16 AC)</li>
+    <li>G → Grande (R$18 CP | R$20 AC)</li>
+  </ul>
+
+  <p>
+    O sistema permite adicionar vários pedidos, informando a quantidade desejada de cada item.  
+    O valor total é acumulado e exibido ao final.
+  </p>
+</div>
+
+<!-- BOTÃO -->
+<button onclick="iniciar()">▶ Iniciar Pedido</button>
+
+<!-- TERMINAL -->
+<div id="terminal"></div>
+<input id="inputBox" placeholder="Digite aqui e pressione Enter">
+
+<script>
+let etapa = 0;
+let sabor = "";
+let tamanho = "";
+let quantidade = 1;
+let total = 0;
+
+function print(texto = "") {
+  const term = document.getElementById("terminal");
+  term.innerHTML += texto + "<br>";
+  term.scrollTop = term.scrollHeight;
+}
+
+function iniciar() {
+  document.getElementById("terminal").innerHTML = "";
+  etapa = 1;
+  total = 0;
+
+  print("Bem-vindo à sorveteria!");
+  print("");
+  print("Digite o sabor (CP / AC):");
+}
+
+document.getElementById("inputBox").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    let valor = this.value.toUpperCase();
+    this.value = "";
+
+    print("> " + valor);
+
+    // SABOR
+    if (etapa === 1) {
+      if (valor !== "CP" && valor !== "AC") {
+        print("Sabor inválido.");
+        print("");
+        print("Digite o sabor (CP / AC):");
+        return;
+      }
+
+      sabor = valor;
+      etapa = 2;
+
+      print("");
+      print("Digite o tamanho (P / M / G):");
+    }
+
+    // TAMANHO
+    else if (etapa === 2) {
+      if (!["P","M","G"].includes(valor)) {
+        print("Tamanho inválido.");
+        print("");
+        print("Digite o tamanho (P / M / G):");
+        return;
+      }
+
+      tamanho = valor;
+      etapa = 3;
+
+      print("");
+      print("Digite a quantidade:");
+    }
+
+    // QUANTIDADE
+    else if (etapa === 3) {
+      quantidade = parseInt(valor);
+
+      if (isNaN(quantidade) || quantidade <= 0) {
+        print("Quantidade inválida.");
+        print("");
+        print("Digite a quantidade:");
+        return;
+      }
+
+      let preco = 0;
+
+      if (sabor === "CP") {
+        if (tamanho === "P") preco = 9;
+        else if (tamanho === "M") preco = 14;
+        else preco = 18;
+      } else {
+        if (tamanho === "P") preco = 11;
+        else if (tamanho === "M") preco = 16;
+        else preco = 20;
+      }
+
+      let subtotal = preco * quantidade;
+      total += subtotal;
+
+      print("");
+      print(`Pedido: ${sabor} ${tamanho} x${quantidade} → R$ ${subtotal}`);
+      print("");
+
+      etapa = 4;
+      print("Deseja pedir mais? (S/N)");
+    }
+
+    // CONTINUAR OU FINALIZAR
+    else if (etapa === 4) {
+      if (valor === "S") {
+        etapa = 1;
+        print("");
+        print("Digite o sabor (CP / AC):");
+      } 
+      else if (valor === "N") {
+        print("");
+        print(`Total a pagar: R$ ${total}`);
+        print("Obrigado pela preferência!");
+        etapa = 0;
+      } 
+      else {
+        print("Digite S ou N.");
+      }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
