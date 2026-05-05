@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cookie Clicker Simples</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>🍪 Cookie Clicker</h1>
+
+  <p>Cookies: <span id="cookies">0</span></p>
+  <p>Cookies por clique: <span id="porClique">1</span></p>
+
+  <button id="cookie">🍪</button>
+
+  <div class="loja">
+    <h2>Loja</h2>
+
+    <button onclick="comprarUpgrade()">
+      Comprar upgrade de clique<br>
+      Custo: <span id="custoUpgrade">10</span> cookies
+    </button>
+
+    <button onclick="comprarAutoClicker()">
+      Comprar auto clicker<br>
+      Custo: <span id="custoAuto">50</span> cookies
+    </button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
